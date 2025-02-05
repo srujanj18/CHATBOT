@@ -1,0 +1,89 @@
+body {
+    background-image: url('background.jpg'); /* Set the background image */
+    background-size: cover; /* Cover the entire background */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent repeating the background */
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+}
+
+.container {
+    margin-top: 50px; /* Space from the top */
+    background-color: rgba(0, 0, 0, 0.2); /* More transparent white background */
+    border-radius: 10px; /* Rounded corners for the container */
+    padding: 20px; /* Padding inside the container */
+}
+
+#chatbox {
+    height: 400px; /* Fixed height for the chatbox */
+    overflow-y: scroll; /* Enable scrolling */
+    border: 1px solid #ccc; /* Border around the chatbox */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Padding inside the chatbox */
+    background-color: rgba(0, 0, 0, 0.4); /* More transparent white background for chatbox */
+}
+
+.message {
+    margin-bottom: 15px; /* Space between messages */
+    display: flex; /* Flexbox for alignment */
+    align-items: flex-start; /* Align items at the start */
+}
+
+.icon {
+    width: 40px; /* Icon size */
+    height: 40px; /* Icon size */
+    border-radius: 50%; /* Round icons */
+    margin-right: 10px; /* Space between icon and text */
+}
+
+.user-icon {
+    background-color: #007bff; /* User icon background color */
+}
+
+.bot-icon {
+    background-color: #28a745; /* Bot icon background color */
+}
+
+.user-message {
+    justify-content: flex-end; /* Align user messages to the right */
+}
+
+.bot-message {
+    justify-content: flex-start; /* Align bot messages to the left */
+}
+
+.message-content {
+    background-color: #e9ecef; /* Default background for messages */
+    color: black; /* Default text color */
+    padding: 10px; /* Padding for message */
+    border-radius: 10px; /* Rounded corners for message */
+}
+
+.user-message .message-content {
+    background-color: #007bff; /* User message background color */
+    color: white; /* User message text color */
+}
+
+.bot-message .message-content {
+    background-color: #e9ecef; /* Bot message background color */
+    color: black; /* Bot message text color */
+}
+
+.message img {
+    width: 40px; /* Icon size */
+    height: 40px; /* Icon size */
+    border-radius: 50%; /* Round icons */
+    margin-right: 10px; /* Space between icon and text */
+}
+
+#sendButton {
+    display: flex; /* Align icon */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    width: 40px; /* Set a fixed width for the button */
+    height: 40px; /* Set a fixed height for the button */
+}
+
+#sendButton i {
+    font-size: 18px; /* Adjust size of the icon */
+}
+

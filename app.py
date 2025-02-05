@@ -5,13 +5,17 @@ from langchain_groq import ChatGroq
 from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
 from langgraph.prebuilt import ToolNode
 import os  # Import os module to set environment variables
+from flask import Flask, render_template, request, jsonify
 
+app = Flask(__name__)
+
+# Initialize your LLM and other components here
 llm = ChatGroq(temperature=0, model="Llama-3.3-70b-Specdec", api_key="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")
 
-system_prompt = """You are a helpful chatbot. You can help users with their questions.You can also ask questions to clarify the user's intent. You can also provide information to the user."""
+system_prompt = """You are a helpful chatbot. You can help users with their questions."""
 
 class AgentState(TypedDict):
-    messages: Annotated[list[AnyMessage], operator.add]
+    messages: list[AnyMessage]
 
 def call_llm(state: AgentState):
     messages = state["messages"]
@@ -89,14 +93,22 @@ graph = graph.compile()
 from IPython.display import Image, display
 display(Image(graph.get_graph().draw_mermaid_png()))
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
+@app.route('/ask', methods=['POST'])
+def ask():
+    user_message = request.json.get('message')
+    
+    # Process the message and generate a response
+    messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
+    response = llm.invoke(messages)  # Call your LLM to get a response
+    
+    # Access the content directly from the response
+    response_text = response.content if hasattr(response, 'content') else 'No response content available.'
 
-# User input section with repetition
-while True:
-    user_input = input("Please enter your question (or type 'exit' to quit): ")  # Prompt the user for input
-    if user_input.lower() == 'exit':  # Check if the user wants to exit
-        print("Exiting the program.")
-        break  # Exit the loop
-    messages = [HumanMessage(content=user_input)]  # Create a HumanMessage with the user's input
-    result = graph.invoke({"messages": messages})  # Invoke the graph with the user's message
-    print(result['messages'][-1].content)  # Print the model's response
+    return jsonify({'response': response_text})  # Return the response
+
+if __name__ == '__main__':
+    app.run(debug=True)  # Run in debug mode for development

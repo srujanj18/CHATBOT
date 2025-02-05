@@ -1,0 +1,11 @@
+{
+  "name": "chatbot-project",
+  "version": "1.0.0",
+  "description": "A simple chatbot application using Flask.",
+  "main": "app.py",
+  "scripts": {
+    "start": "python app.py"
+  },
+  "author": "",
+  "license": "ISC"
+}
