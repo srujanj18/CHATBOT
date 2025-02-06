@@ -12,7 +12,7 @@ import requests  # Import requests to make API calls
 app = Flask(__name__)
 
 # Initialize your LLM and other components here
-llm = ChatGroq(temperature=0, model="Llama-3.3-70b-Specdec", api_key="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")
+llm = ChatGroq(temperature=0, model="Llama-3.3-70b-Specdec", api_key="YOUR_API_KEY")
 
 system_prompt = """You are a helpful chatbot. You can help users with their questions."""
 
@@ -43,7 +43,7 @@ display(Image(agent.get_graph().draw_mermaid_png()))
 from langchain_community.tools.tavily_search import TavilySearchResults
 
 # Set the environment variable for the API key
-os.environ["TAVILY_API_KEY"] = "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"
+os.environ["TAVILY_API_KEY"] = "YOUR_API_KEY"
 
 tool = TavilySearchResults(max_results=4)  # No need to pass the API key directly
 print(type(tool))
