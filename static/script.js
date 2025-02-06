@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    let isMuted = false; // Track mute state
+    let currentUtterance = null; // Track the current utterance
+
     function sendMessage(userInput) {
         if (userInput.trim() === "") return; // Prevent sending empty messages
 
@@ -9,6 +12,13 @@ $(document).ready(function () {
         );
         $("#userInput").val("");
 
+        // Check if the user is asking for an image
+        if (userInput.toLowerCase().includes("generate image")) {
+            const prompt = userInput.replace("generate image", "").trim(); // Extract the prompt
+            generateImage(prompt); // Call the image generation function
+            return; // Exit the function early
+        }
+
         // Send the user input to the server
         $.ajax({
             type: "POST",
@@ -16,12 +26,8 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify({ message: userInput }),
             success: function(data) {
-                $("#chatbox").append(
-                    '<div class="message bot-message"><div class="icon bot-icon"><img src="static/bot-icon.jpg" alt="Bot Icon" class="icon"></div><div class="message-content">' +
-                    data.response +
-                    "</div></div>"
-                );
-                $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight);
+                // Call the typing effect function
+                typeMessage(data.response);
             },
             error: function(error) {
                 console.error("Error:", error);
@@ -31,6 +37,58 @@ $(document).ready(function () {
             }
         });
     }
+
+    // Function for typing effect
+    function typeMessage(text) {
+        const typingDelay = 0; // Decrease the delay for faster typing (in milliseconds)
+        let index = 0;
+
+        // Create a new message element
+        const messageElement = $('<div class="message bot-message"><div class="icon bot-icon"><img src="static/bot-icon.jpg" alt="Bot Icon" class="icon"></div><div class="message-content"></div></div>');
+        $("#chatbox").append(messageElement);
+        $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight); // Scroll to the bottom
+
+        // Function to type each character
+        function typeCharacter() {
+            if (index < text.length) {
+                messageElement.find('.message-content').append(text.charAt(index));
+                index++;
+                setTimeout(typeCharacter, typingDelay); // Call the function again after the delay
+            } else {
+                if (!isMuted) {
+                    speak(text); // Call the speak function to read out the response
+                }
+            }
+        }
+
+        typeCharacter(); // Start typing
+    }
+
+    // Function for speech synthesis
+    function speak(text) {
+        if (isMuted) return; // Don't speak if muted
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(currentUtterance);
+    }
+
+    // Mute and Unmute functionality
+    $("#muteButton").click(function() {
+        isMuted = true;
+        if (currentUtterance) {
+            window.speechSynthesis.pause(); // Pause the current utterance
+        }
+        $(this).hide(); // Hide mute button
+        $("#unmuteButton").show(); // Show unmute button
+    });
+
+    $("#unmuteButton").click(function() {
+        isMuted = false;
+        if (currentUtterance) {
+            window.speechSynthesis.resume(); // Resume the current utterance
+        }
+        $(this).hide(); // Hide unmute button
+        $("#muteButton").show(); // Show mute button
+    });
 
     // Send message on button click
     $("#sendButton").click(function() {
@@ -74,9 +132,31 @@ $(document).ready(function () {
         };
     });
 
-    // Speech synthesis
-    function speak(text) {
-        var utterance = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(utterance);
+    // Function to generate an image
+    function generateImage(prompt) {
+        $.ajax({
+            type: "POST",
+            url: "/generate_image",
+            contentType: "application/json",
+            data: JSON.stringify({ prompt: prompt }),
+            success: function(data) {
+                if (data.image_url) {
+                    $("#chatbox").append(
+                        '<div class="message bot-message"><div class="icon bot-icon"><img src="static/bot-icon.jpg" alt="Bot Icon" class="icon"></div><div class="message-content"><img src="' + data.image_url + '" alt="Generated Image" style="max-width: 100%; height: auto;"></div></div>'
+                    );
+                    $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight); // Scroll to the bottom
+                } else {
+                    $("#chatbox").append(
+                        '<div class="message bot-message"><div class="message-content">Error generating image.</div></div>'
+                    );
+                }
+            },
+            error: function(error) {
+                console.error("Error:", error);
+                $("#chatbox").append(
+                    '<div class="message bot-message"><div class="message-content">Error: Unable to generate image.</div></div>'
+                );
+            }
+        });
     }
 });

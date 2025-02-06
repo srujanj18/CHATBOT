@@ -6,6 +6,8 @@ from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, Too
 from langgraph.prebuilt import ToolNode
 import os  # Import os module to set environment variables
 from flask import Flask, render_template, request, jsonify
+from datetime import datetime  # Import datetime module
+import requests  # Import requests to make API calls
 
 app = Flask(__name__)
 
@@ -101,14 +103,54 @@ def index():
 def ask():
     user_message = request.json.get('message')
     
-    # Process the message and generate a response
-    messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
-    response = llm.invoke(messages)  # Call your LLM to get a response
-    
-    # Access the content directly from the response
-    response_text = response.content if hasattr(response, 'content') else 'No response content available.'
+    # Check if the user is asking for the current time
+    if "time" in user_message.lower():
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Get current time
+        response_text = f"The current time is: {current_time}"
+    else:
+        try:
+            # Process the message and generate a response
+            messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
+            response = llm.invoke(messages)  # Call your LLM to get a response
+            
+            # Access the content directly from the response
+            response_text = response.content if hasattr(response, 'content') else 'No response content available.'
+        except Exception as e:
+            print(f"Error occurred: {e}")  # Log the error for debugging
+            response_text = "Sorry, I couldn't process your request at the moment. Please try again later."
 
     return jsonify({'response': response_text})  # Return the response
+
+@app.route('/generate_image', methods=['POST'])
+def generate_image():
+    prompt = request.json.get('prompt')
+    
+    # Call the Hugging Face image generation API
+    try:
+        response = requests.post(
+            "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4",  # Example model endpoint
+            headers={
+                "Authorization": f"Bearer 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",  # Your Hugging Face token
+                "Content-Type": "application/json"
+            },
+            json={
+                "inputs": prompt,
+                "options": {"use_cache": False}  # Optional: Disable caching
+            }
+        )
+        
+        # Check if the response is successful
+        if response.status_code == 200:
+            response_data = response.json()
+            image_url = response_data['generated_images'][0]  # Adjust based on the API response structure
+        else:
+            print(f"Error: {response.status_code}, {response.text}")
+            image_url = None
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        image_url = None
+
+    return jsonify({'image_url': image_url})  # Return the image URL
 
 if __name__ == '__main__':
     app.run(debug=True)  # Run in debug mode for development
