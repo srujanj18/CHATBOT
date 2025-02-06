@@ -125,14 +125,19 @@ def ask():
 def generate_image():
     prompt = request.json.get('prompt')
     
+    # Load the token from the environment variable
+    hugging_face_token = os.getenv("HUGGING_FACE_TOKEN")
+
+    headers={
+        "Authorization": f"Bearer {hugging_face_token}",
+        "Content-Type": "application/json"
+    }
+
     # Call the Hugging Face image generation API
     try:
         response = requests.post(
             "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4",  # Example model endpoint
-            headers={
-                "Authorization": f"Bearer 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",  # Your Hugging Face token
-                "Content-Type": "application/json"
-            },
+            headers=headers,
             json={
                 "inputs": prompt,
                 "options": {"use_cache": False}  # Optional: Disable caching
