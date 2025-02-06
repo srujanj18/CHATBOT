@@ -2,13 +2,14 @@
 
 ## Overview
 
-This project is a virtual assistant chatbot built using Flask and a language model. The chatbot can respond to user queries and provide assistance in a conversational manner. It also supports voice input for a more interactive experience.
+This project is a virtual assistant chatbot built using Flask and a language model. The chatbot can respond to user queries, provide assistance in a conversational manner, and generate images based on user prompts. It also supports voice input for a more interactive experience.
 
 ## Features
 
 - Text-based interaction with the chatbot.
 - Voice input functionality using the Web Speech API.
 - Integration with a language model for generating responses.
+- Image generation capabilities using the Hugging Face API.
 - Responsive web interface.
 
 ## Technologies Used
@@ -17,6 +18,7 @@ This project is a virtual assistant chatbot built using Flask and a language mod
 - **JavaScript**: For handling client-side interactions and voice recognition.
 - **HTML/CSS**: For structuring and styling the web interface.
 - **LangChain**: For integrating language models.
+- **Hugging Face API**: For generating images based on user prompts.
 
 ## Requirements
 
@@ -53,7 +55,7 @@ You can install these packages using the `requirements.txt` file provided in the
    pip install -r requirements.txt
    ```
 
-4. **Set your API key**: Make sure to replace `"your_api_key_here"` in `app.py` with your actual API key for the language model.
+4. **Set your API key**: Make sure to replace `"YOUR_HUGGING_FACE_TOKEN"` in `app.py` with your actual Hugging Face API token.
 
 ## Running the Application
 
@@ -65,16 +67,17 @@ You can install these packages using the `requirements.txt` file provided in the
 
 2. **Open your web browser** and navigate to:
 
-   ```
+   ``` 
    http://localhost:5000/
    ```
 
-3. **Interact with the chatbot**: Type your message or use the voice input feature.
+3. **Interact with the chatbot**: Type your message or use the voice input feature. To generate an image, type "generate image of [your prompt]".
 
 ## Usage
 
 - Type your message in the input box and press the send button or hit Enter.
 - Click the "Start Voice Input" button to use voice recognition.
+- To generate an image, type "generate image of [your prompt]".
 
 ## Contributing
 
@@ -89,3 +92,4 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 - [Flask](https://flask.palletsprojects.com/)
 - [LangChain](https://langchain.readthedocs.io/)
 - [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
+- [Hugging Face](https://huggingface.co/)
