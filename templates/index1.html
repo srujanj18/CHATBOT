@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Image Generator</title>
+    <link rel="stylesheet" href="style1.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🤖 AI Image Generator</h1>
+      <p>Describe an image, and our AI will create it for you!</p>
+      <input type="text" id="userInput" placeholder="Enter a description..." />
+      <button onclick="generateImage()">Generate Image</button>
+      <div id="loading">⚡ Generating... Please wait.</div>
+
+      <!-- Image Display & Download Button -->
+      <div id="imageContainer">
+        <img
+          id="generatedImage"
+          src=""
+          alt="Generated Image"
+          style="display: none"
+        />
+        <a
+          id="downloadBtn"
+          href="#"
+          download="generated_image.png"
+          style="display: none"
+          >📥 Download Image</a
+        >
+      </div>
+    </div>
+
+    <script>
+      function generateImage() {
+        let userInput = document.getElementById("userInput").value;
+        let loadingText = document.getElementById("loading");
+        let imageElement = document.getElementById("generatedImage");
+        let downloadBtn = document.getElementById("downloadBtn");
+
+        if (!userInput) {
+          alert("Please enter a description!");
+          return;
+        }
+
+        loadingText.style.display = "block";
+        imageElement.style.display = "none";
+        downloadBtn.style.display = "none";
+
+        fetch("/generate_image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: userInput }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            loadingText.style.display = "none";
+            if (data.image_url) {
+              imageElement.src = data.image_url;
+              imageElement.style.display = "block";
+              downloadBtn.href = data.image_url;
+              downloadBtn.style.display = "block";
+            } else {
+              imageElement.style.display = "none";
+              alert("❌ Image generation failed.");
+            }
+          })
+          .catch((error) => {
+            loadingText.style.display = "none";
+            alert("❌ Error: " + error);
+          });
+      }
+    </script>
+  </body>
+</html>

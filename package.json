@@ -1,11 +1,24 @@
 {
-  "name": "chatbot-project",
-  "version": "1.0.0",
-  "description": "A simple chatbot application using Flask.",
-  "main": "app.py",
-  "scripts": {
-    "start": "python app.py"
+  "chatbot": {
+    "name": "chatbot-project",
+    "version": "1.0.0",
+    "description": "A simple chatbot application using Flask.",
+    "main": "app.py",
+    "scripts": {
+      "start": "python app.py"
+    },
+    "author": "",
+    "license": "ISC"
   },
-  "author": "",
-  "license": "ISC"
+  "image_generation": {
+    "inputs": "{{user_prompt}}",
+    "parameters": {
+      "width": 1024,
+      "height": 1024,
+      "num_images": 1
+    },
+    "options": {
+      "wait_for_model": true
+    }
+  }
 }

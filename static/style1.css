@@ -1,0 +1,29 @@
+#imageContainer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#generatedImage {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00FFFF;
+}
+
+#downloadBtn {
+    display: block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    font-size: 16px;
+    text-decoration: none;
+    color: white;
+    background: #FF00FF;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 0 10px #FF00FF;
+}
+
+#downloadBtn:hover {
+    background: #00FFFF;
+    box-shadow: 0 0 15px #00FFFF;
+    color: black;
+}
