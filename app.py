@@ -12,7 +12,7 @@ import requests  # Import requests to make API calls
 app = Flask(__name__)
 
 # Initialize your LLM and other components here
-llm = ChatGroq(temperature=0, model="Llama-3.3-70b-Specdec", api_key="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")
+llm = ChatGroq(temperature=0, model="Llama-3.3-70b-Specdec", api_key="GROOQ_API_KEY")
 
 system_prompt = """You are a helpful chatbot. You can help users with their questions."""
 
@@ -35,7 +35,7 @@ agent = graph.compile()
 from langchain_community.tools.tavily_search import TavilySearchResults
 
 # Set the environment variable for the API key
-os.environ["TAVILY_API_KEY"] = "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"
+os.environ["TAVILY_API_KEY"] = "TAVILY_API_KEY"
 
 tool = TavilySearchResults(max_results=4)  # No need to pass the API key directly
 tools = [tool]
@@ -99,7 +99,7 @@ def generate_image():
     prompt = request.json.get('prompt')
     
     # Directly use API key (for demonstration purposes only)
-    hugging_face_token = "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"  # API key hardcoded
+    hugging_face_token = "HF_API_KEY"  # API key hardcoded
 
     headers = {
         "Authorization": f"Bearer {hugging_face_token}",
