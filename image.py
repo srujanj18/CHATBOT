@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-API_KEY = "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"
+API_KEY = "HF_API_KEY"
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
